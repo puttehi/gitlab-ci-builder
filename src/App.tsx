@@ -1,35 +1,93 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import ReactFlow, {
+    FitViewOptions,
+    Controls,
+    MiniMap,
+    Background,
+    BackgroundVariant,
+    DefaultEdgeOptions,
+    NodeTypes
+} from 'reactflow';
+import { shallow } from 'zustand/shallow';
+import 'reactflow/dist/style.css';
 
-function App() {
-  const [count, setCount] = useState(0)
+import JobNode from './JobNode';
+import UIDemoNode from './UIDemoNode'
+import { useFlowState, RFState, /* useArrowHandleStore, ArrowHandleStore */ } from './useStore';
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+const fitViewOptions: FitViewOptions = {
+    padding: 0.2,
+};
+
+const defaultEdgeOptions: DefaultEdgeOptions = {
+    animated: true,
+};
+
+const nodeTypes: NodeTypes = {
+    jobNode: JobNode,
+    uiDemoNode: UIDemoNode
 }
 
-export default App
+const selector = (state: RFState) => ({
+    nodes: state.nodes,
+    edges: state.edges,
+    onNodesChange: state.onNodesChange,
+    onEdgesChange: state.onEdgesChange,
+    edgeUpdateSuccessful: state.edgeUpdateSuccessful,
+    onEdgeUpdate: state.onEdgeUpdate,
+    onEdgesChangeStart: state.onEdgesChangeStart,
+    onEdgesChangeEnd: state.onEdgesChangeEnd,
+    onConnect: state.onConnect,
+});
+
+export default function App() {
+    /*Delete edge drop example */
+    /* const edgeUpdateSuccessful = useRef(true);
+    const [nodes, , onNodesChange] = useNodesState(initialNodes);
+    const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+    const onConnect = useCallback((params) => setEdges((els) => addEdge(params, els)), []);
+
+    const onEdgeUpdateStart = useCallback(() => {
+        edgeUpdateSuccessful.current = false;
+    }, []);
+
+    const onEdgeUpdate = useCallback((oldEdge, newConnection) => {
+        edgeUpdateSuccessful.current = true;
+        setEdges((els) => updateEdge(oldEdge, newConnection, els));
+    }, []);
+
+    const onEdgeUpdateEnd = useCallback((_, edge) => {
+        if (!edgeUpdateSuccessful.current) {
+            setEdges((eds) => eds.filter((e) => e.id !== edge.id));
+        }
+
+        edgeUpdateSuccessful.current = true;
+    }, []); */
+    // const { nodes, edges, edgeUpdateSuccessful, onNodesChange, onEdgesChange, onEdgesChangeStart, onEdgeUpdate, onEdgesChangeEnd, onConnect } = useFlowState(selector, shallow);
+    const { nodes, edges, /*edgeUpdateSuccessful,*/
+        onNodesChange, onEdgesChange,
+        onEdgesChangeStart, onEdgeUpdate, onEdgesChangeEnd,
+        onConnect } = useFlowState(selector, shallow)
+
+    return (
+        <div style={{ width: '100vw', height: '100vh' }}>
+            <ReactFlow
+                nodes={nodes}
+                edges={edges}
+                onNodesChange={onNodesChange}
+                onEdgesChange={onEdgesChange}
+                onConnect={onConnect}
+                fitView
+                fitViewOptions={fitViewOptions}
+                defaultEdgeOptions={defaultEdgeOptions}
+                nodeTypes={nodeTypes}
+                onEdgeUpdate={onEdgeUpdate}
+                onEdgeUpdateStart={onEdgesChangeStart}
+                onEdgeUpdateEnd={onEdgesChangeEnd}
+            >
+                <Controls />
+                <MiniMap />
+                <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
+            </ReactFlow>
+        </div>
+    );
+}
