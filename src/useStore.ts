@@ -50,7 +50,7 @@ const initialNodes: Node[] = [
     }
 ];
 
-const initialEdges: Edge[] = [{ id: 'e1-2', source: '1', target: '2' }];
+// const initialEdges: Edge[] = [{ id: 'e1-2', source: '1', target: '2' }];
 
 export type RFState = {
     nodes: Node[];
@@ -71,6 +71,7 @@ export type RFState = {
 // this is our useStore hook that we can use in our components to get parts of the store and call actions
 export const useFlowState = createWithEqualityFn<RFState>((set, get) => {
     /*init func*/
+
     return {
         nodes: initialNodes,
         edges: [],//initialEdges,
@@ -80,12 +81,14 @@ export const useFlowState = createWithEqualityFn<RFState>((set, get) => {
             set({
                 nodes: applyNodeChanges(changes, get().nodes),
             });
+            console.log("change nodes")
+            console.log(get().edges)
         },
         onEdgesChange: (changes: EdgeChange[]) => {
             set({
                 edges: applyEdgeChanges(changes, get().edges)
             });
-            console.log("change")
+            console.log("change edges")
         },
 
         // Start dragging
@@ -93,7 +96,7 @@ export const useFlowState = createWithEqualityFn<RFState>((set, get) => {
             set({
                 edgeUpdateSuccessful: false
             })
-            console.log("start")
+            console.log("start edgeschange")
         },
 
         // ??
@@ -101,7 +104,7 @@ export const useFlowState = createWithEqualityFn<RFState>((set, get) => {
             set({
                 edgeUpdateSuccessful: true
             })
-            console.log("update")
+            console.log("update edge")
             //setEdges((els) => updateEdge(oldEdge, newConnection, els));
         },
 
@@ -137,7 +140,7 @@ export const useFlowState = createWithEqualityFn<RFState>((set, get) => {
                 console.log(state.edges)
                 //setEdges((eds) => eds.filter((e) => e.id !== edge.id));
             }
-            console.log("end")
+            console.log("end edgeschange")
         },
 
         // Is source -> target, not necessarily new

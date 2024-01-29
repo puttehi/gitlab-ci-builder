@@ -55,13 +55,13 @@ export default function UIDemoNode() {
                 <Text text="Looooooooooooooooog text component" />
             </div>
             <div style={demoStyle}>
-                <Label label="Label" />
+                <Label label="Variables" />
             </div>
             <div style={demoStyle}>
-                <LabeledInput label="Labeled input" onInputChanged={setInputValue} value={inputValue} />
+                <LabeledInput label="" onInputChanged={setInputValue} value={inputValue} />
             </div>
             <div style={demoStyle}>
-                <LabeledInput label="Looooooooong labeled input" onInputChanged={setInputValue} value={inputValue} />
+                <LabeledInput label="" onInputChanged={setInputValue} value={inputValue} />
             </div>
             <div style={demoStyle}>
                 <Text text={`Input is: ${inputValue}`} />

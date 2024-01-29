@@ -5,7 +5,8 @@ import ReactFlow, {
     Background,
     BackgroundVariant,
     DefaultEdgeOptions,
-    NodeTypes
+    NodeTypes,
+    Edge
 } from 'reactflow';
 import { shallow } from 'zustand/shallow';
 import 'reactflow/dist/style.css';
@@ -13,6 +14,7 @@ import 'reactflow/dist/style.css';
 import JobNode from './JobNode';
 import UIDemoNode from './UIDemoNode'
 import { useFlowState, RFState, /* useArrowHandleStore, ArrowHandleStore */ } from './useStore';
+import { useEffect } from 'react';
 
 const fitViewOptions: FitViewOptions = {
     padding: 0.2,
@@ -68,6 +70,13 @@ export default function App() {
         onEdgesChangeStart, onEdgeUpdate, onEdgesChangeEnd,
         onConnect } = useFlowState(selector, shallow)
 
+
+    /* useEffect(() => {
+        const initialEdges: Edge[] = [{ id: 'e1-2', source: '1', target: '2' }];
+        useFlowState.setState((s) => { return { ...s, edges: initialEdges } })
+        return () => {
+        }
+    }, []) */
     return (
         <div style={{ width: '100vw', height: '100vh' }}>
             <ReactFlow
